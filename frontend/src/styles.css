@@ -1,0 +1,1165 @@
+/* ============ Design tokens: the single source of truth ============ */
+:root {
+  /* Surface colors: page background + white "cards" on top. */
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --surface-soft: #f8fafc;
+
+  /* Text: strong ink for headings, calm gray for secondary text. */
+  --ink: #0f172a;
+  --ink-soft: #334155;
+  --muted: #64748b;
+  --faint: #94a3b8;
+
+  /* Lines between elements. */
+  --border: #e7e9f0;
+  --border-strong: #d9dce6;
+
+  /* Brand: indigo to violet, used for main actions + assistant gradient. */
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-soft: #eef2ff;
+  --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+
+  /* Verdict colors: GOOD / RISKY / LOSS (each has a soft background). */
+  --good: #059669;
+  --good-bg: #e9f7f1;
+  --risky: #d97706;
+  --risky-bg: #fdf3e1;
+  --loss: #e11d48;
+  --loss-bg: #fdeef2;
+
+  /* Overlay behind drawers and popups. */
+  --scrim: rgba(15, 23, 42, 0.45);
+
+  /* Shape and depth. */
+  --radius: 14px;
+  --radius-sm: 10px;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 1px 2px rgba(15, 23, 42, 0.04), 0 10px 28px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 24px 70px rgba(15, 23, 42, 0.18);
+
+  /* Motion: fast for taps, medium for panels. */
+  --fast: 160ms;
+  --med: 260ms;
+  --ease: cubic-bezier(0.25, 0.6, 0.35, 1);
+}
+
+/* ============ Base page + typography ============ */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* A clear focus ring for keyboard navigation. */
+:focus-visible {
+  outline: 3px solid rgba(99, 102, 241, 0.45);
+  outline-offset: 2px;
+}
+
+/* Page container: centered column, wide on big screens. */
+.app {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 20px 20px 120px; /* bottom space leaves room for the floating button */
+}
+
+/* ============ Top bar / brand ============ */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 6px 2px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* The gradient square with the sparkle icon. */
+.brand-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(99, 102, 241, 0.35);
+  flex-shrink: 0;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.brand p {
+  margin: 1px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* A tag announcing the AI feature. */
+.topbar-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  background: var(--primary-soft);
+  border: 1px solid #dfe5fc;
+  padding: 8px 14px;
+  border-radius: 999px;
+}
+
+/* ============ Error banner ============ */
+.error-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--loss-bg);
+  color: #be123c;
+  border: 1px solid #f6cdd7;
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.error-banner code {
+  background: rgba(225, 29, 72, 0.08);
+  padding: 1px 6px;
+  border-radius: 6px;
+  font-size: 12.5px;
+}
+
+/* ============ Stat cards ============ */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 16px 18px;
+}
+
+/* The small tinted square behind each stat icon. */
+.stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-icon.brand-tint { background: var(--primary-soft); color: var(--primary-dark); }
+.stat-icon.good-tint { background: var(--good-bg); color: var(--good); }
+.stat-icon.warn-tint { background: var(--risky-bg); color: var(--risky); }
+
+.stat-label {
+  font-size: 12.5px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* ============ Dashboard panels ============ */
+/* Two balanced columns; stacked below 980px. */
+.dashboard {
+  display: grid;
+  grid-template-columns: minmax(340px, 2fr) minmax(0, 3fr);
+  gap: 22px;
+  align-items: start;
+}
+
+@media (max-width: 980px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 20px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.panel-head h2 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.panel-sub {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* The small number pill next to a panel title. */
+.count-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* ============ Buttons and small controls ============ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform var(--fast) var(--ease), box-shadow var(--fast) var(--ease),
+    background var(--fast) var(--ease), border-color var(--fast) var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* The main filled button (indigo). */
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(99, 102, 241, 0.3);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* A quiet bordered button. */
+.btn-ghost {
+  background: var(--surface);
+  border-color: var(--border-strong);
+  color: var(--ink-soft);
+}
+
+.btn-ghost:hover {
+  background: var(--surface-soft);
+  border-color: var(--faint);
+}
+
+/* The danger (delete) button. */
+.btn-danger {
+  background: var(--loss-bg);
+  color: #be123c;
+  border-color: #f6cdd7;
+}
+
+.btn-danger:hover {
+  background: #fbe3e8;
+}
+
+/* Small round icon button (close, delete). */
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition: background var(--fast) var(--ease), color var(--fast) var(--ease),
+    border-color var(--fast) var(--ease), transform var(--fast) var(--ease);
+}
+
+.icon-btn:hover {
+  background: var(--surface-soft);
+  color: var(--ink);
+  border-color: var(--border-strong);
+}
+
+.icon-btn:active {
+  transform: scale(0.95);
+}
+
+/* A smaller icon button used inside table rows. */
+.icon-btn.small {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+}
+
+/* Red version for destructive actions. */
+.icon-btn.danger:hover {
+  background: var(--loss-bg);
+  color: #be123c;
+  border-color: #f6cdd7;
+}
+
+/* ============ Add-product form ============ */
+.pform {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 10px;
+  align-items: end;
+  background: var(--surface-soft);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 560px) {
+  .pform {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.field input {
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--ink);
+  transition: border-color var(--fast) var(--ease), box-shadow var(--fast) var(--ease);
+}
+
+.field input::placeholder {
+  color: var(--faint);
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+}
+
+.form-error {
+  margin: -6px 0 14px;
+  font-size: 13px;
+  color: #be123c;
+}
+
+/* ============ Product tiles ============ */
+.ptiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.ptile {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  transition: box-shadow var(--fast) var(--ease), transform var(--fast) var(--ease),
+    border-color var(--fast) var(--ease);
+}
+
+.ptile:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.ptile-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ptile h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ptile-price {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.ptile-price strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.ptile-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+/* The margin badge colored by margin health. */
+.margin-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid;
+}
+
+.margin-chip.high { color: var(--good); background: var(--good-bg); border-color: #c9ecdd; }
+.margin-chip.mid { color: var(--primary-dark); background: var(--primary-soft); border-color: #dbe2fc; }
+.margin-chip.low { color: var(--risky); background: var(--risky-bg); border-color: #f3e2bd; }
+
+/* ============ Saved-offers table ============ */
+.table-wrap {
+  overflow-x: auto;
+}
+
+.otable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.otable th {
+  text-align: left;
+  padding: 8px 12px;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--border);
+}
+
+.otable td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink-soft);
+}
+
+.otable tbody tr {
+  transition: background var(--fast) var(--ease);
+}
+
+.otable tbody tr:hover {
+  background: var(--surface-soft);
+}
+
+.otable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.otable .nowrap {
+  white-space: nowrap;
+}
+
+.cell-main {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.cell-dim {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ============ Verdict badges ============ */
+/* Each has a dot + color so meaning never relies on color alone. */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  border: 1px solid;
+}
+
+.badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.badge.good { color: var(--good); background: var(--good-bg); border-color: #c9ecdd; }
+.badge.risky { color: var(--risky); background: var(--risky-bg); border-color: #f3e2bd; }
+.badge.loss { color: var(--loss); background: var(--loss-bg); border-color: #f8cdd7; }
+
+/* ============ Ask AI floating button ============ */
+/* Fixed bottom-right, opens the chat drawer. */
+.fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 58px;
+  padding: 0 24px 0 20px;
+  border: none;
+  border-radius: 999px;
+  background: var(--gradient);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.45);
+  z-index: 60;
+  transition: transform var(--med) var(--ease), box-shadow var(--med) var(--ease);
+}
+
+.fab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px rgba(99, 102, 241, 0.5);
+}
+
+.fab:active {
+  transform: translateY(0) scale(0.97);
+}
+
+@media (max-width: 560px) {
+  .fab {
+    right: 16px;
+    bottom: 16px;
+    padding: 0 20px 0 16px;
+  }
+}
+
+/* ============ Ask AI chat drawer ============ */
+/* Slides in from the right; becomes a bottom sheet on small phones. */
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--scrim);
+  z-index: 70;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--med) var(--ease);
+}
+
+.scrim.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(460px, 100vw);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform var(--med) var(--ease);
+}
+
+.drawer.open {
+  transform: translateX(0);
+}
+
+/* On small phones the drawer becomes a rounded bottom sheet. */
+@media (max-width: 560px) {
+  .drawer {
+    top: auto;
+    width: 100%;
+    height: 88%;
+    border-radius: 22px 22px 0 0;
+    transform: translateY(100%);
+  }
+
+  .drawer.open {
+    transform: translateY(0);
+  }
+}
+
+.drawer-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px 20px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.drawer-head h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.drawer-head p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.drawer-head .grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.drawer-head .icon-btn {
+  flex-shrink: 0;
+}
+
+/* The chip that says which AI answered (Gemini or Mock). */
+.ai-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  background: var(--primary-soft);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.ai-chip .pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--good);
+}
+
+/* ============ Chat messages + analysis card ============ */
+.chat-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--surface-soft);
+}
+
+.chat-list .welcome {
+  text-align: center;
+  margin: 10px 0 6px;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+
+/* One message row. */
+.msg {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  max-width: 92%;
+}
+
+.msg.user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+/* The tiny assistant avatar (gradient square + sparkle). */
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--gradient);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+}
+
+.bubble {
+  padding: 11px 14px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid transparent;
+}
+
+.msg.user .bubble {
+  background: var(--gradient);
+  color: #fff;
+  border-bottom-right-radius: 5px;
+  box-shadow: 0 6px 14px rgba(99, 102, 241, 0.28);
+}
+
+.msg.ai .bubble {
+  background: var(--surface);
+  border-color: var(--border);
+  border-bottom-left-radius: 5px;
+  box-shadow: var(--shadow-sm);
+}
+
+.msg.ai .bubble.error {
+  background: var(--loss-bg);
+  border-color: #f6cdd7;
+  color: #be123c;
+}
+
+/* Example-question chips shown before the first message. */
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 12px 0 4px;
+}
+
+.suggestions span {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  background: var(--primary-soft);
+  border: 1px solid #dfe5fc;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform var(--fast) var(--ease), background var(--fast) var(--ease);
+}
+
+.suggestions span:hover {
+  background: #e2e7ff;
+}
+
+.suggestions span:active {
+  transform: scale(0.97);
+}
+
+/* The chat input row. */
+.chat-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px 18px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.chat-input input {
+  flex: 1;
+  min-width: 0;
+  height: 46px;
+  padding: 0 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--surface-soft);
+  transition: border-color var(--fast) var(--ease), box-shadow var(--fast) var(--ease);
+}
+
+.chat-input input::placeholder {
+  color: var(--faint);
+}
+
+.chat-input input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: var(--surface);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.14);
+}
+
+/* The circular Send button. */
+.send-btn {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--gradient);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(99, 102, 241, 0.32);
+  transition: transform var(--fast) var(--ease), box-shadow var(--fast) var(--ease),
+    opacity var(--fast) var(--ease);
+}
+
+.send-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+.send-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* A gentle "thinking" row with three bouncing dots. */
+.thinking {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+
+.thinking .dots {
+  display: flex;
+  gap: 4px;
+}
+
+.thinking .dots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: dot-bounce 1s infinite ease-in-out;
+}
+
+.thinking .dots i:nth-child(2) { animation-delay: 0.15s; }
+.thinking .dots i:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes dot-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40% { transform: translateY(-5px); opacity: 1; }
+}
+
+/* ---- The analysis card inside an assistant bubble ---- */
+.analysis {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.analysis .verdict {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 14px;
+  background: var(--surface-soft);
+  border-bottom: 1px solid var(--border);
+}
+
+.analysis .verdict .desc {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.vtable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.vtable td {
+  padding: 8px 14px;
+  border-top: 1px solid var(--border);
+}
+
+.vtable tr:first-child td {
+  border-top: none;
+}
+
+.vtable td:first-child {
+  color: var(--muted);
+}
+
+.vtable td:last-child {
+  text-align: right;
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.vtable tr.hl td {
+  background: var(--surface-soft);
+}
+
+.vtable tr.total td:last-child {
+  font-weight: 800;
+  color: var(--primary-dark);
+}
+
+.vtable tr.reference td {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.analysis-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-soft);
+}
+
+.analysis-foot .save-note {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+/* The AI explanation paragraph below the numbers. */
+.ai-explain {
+  margin: 10px 2px 0;
+  font-size: 13.5px;
+}
+
+/* ============ Confirm popup (custom YES / NO) ============ */
+/* A small dialog centered over a scrim. Used before any delete. */
+.modal-scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--scrim);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fade-in 180ms var(--ease);
+}
+
+.modal {
+  width: min(420px, 100%);
+  background: var(--surface);
+  border-radius: 18px;
+  box-shadow: var(--shadow-lg);
+  padding: 24px;
+  text-align: center;
+  animation: modal-in 220ms var(--ease);
+}
+
+.modal-icon {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: var(--loss-bg);
+  color: #be123c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.modal p {
+  margin: 0 auto;
+  max-width: 320px;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.modal p strong {
+  color: var(--ink);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.modal-actions .btn {
+  flex: 1;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.92) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ============ Toast (small feedback popup) ============ */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%) translateY(16px);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(90vw, 440px);
+  background: var(--ink);
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 12px 18px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-md);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--med) var(--ease), transform var(--med) var(--ease);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast .tick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--good);
+  flex-shrink: 0;
+}
+
+/* ============ Empty states + footer ============ */
+.empty {
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  padding: 34px 12px;
+}
+
+.empty .empty-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  border-radius: 14px;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--faint);
+}
+
+.footer-note {
+  margin-top: 26px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* ============ Motion safety ============ */
+/* People who ask for less motion get a calm, still interface. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
