@@ -143,7 +143,7 @@ Sample seeded products: Milk (Rs 50 / Rs 48), Biscuits (Rs 50 / Rs 30), Juice (R
 
 ## Video demo
 
-<video src="https://drive.google.com/file/d/14Mu848nBn_ztzxceGme0PYHznlLp7KUu/view?usp=drivesdk" width="100%" controls></video>
+[![Offer Sensei – video demo](https://drive.google.com/thumbnail?id=14Mu848nBn_ztzxceGme0PYHznlLp7KUu&sz=w1000)](https://drive.google.com/file/d/14Mu848nBn_ztzxceGme0PYHznlLp7KUu/view?usp=drivesdk)
 
 
 ## Tests
